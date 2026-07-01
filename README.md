@@ -1,4 +1,4 @@
-# Dunder Mifflin Workshop — Student Repo
+# Dunder Mifflin Workshop — Working copy
 
 > This is the hands-on repo for the **Agentic AI Masterclass** workshop.
 > You will build a series of AI agents around a fictional Dunder Mifflin
