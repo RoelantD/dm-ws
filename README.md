@@ -17,19 +17,22 @@ pip install -r requirements.txt
 cp .env.example .env   # fill in your Azure credentials
 ```
 
-## Baseline branches
+## Catching up with a baseline
 
-Each part has a known-good fallback you can switch to if you fall behind:
+Each part has a completed file in `baseline/` you can copy from if you fall behind.
+Each part that needs a starting template has a file in `starter/` to begin from.
 
-| Part | Branch |
-|------|--------|
-| 1 — Framing & first agent | `baselines/01-first-agent` |
-| 2 — Context engineering | `baselines/02-context-map` |
-| 3 — Specs, memory & personas | `baselines/03-spec` |
-| 4 — Baseline & MCP fundamentals | `baselines/04-mcp-design` |
-| 5 — Build the MCP server | `baselines/05-mcp-server` |
-| 6 — Agent Framework & first MCP agent | `baselines/06-agent` |
-| 7 — Native tools & A2A handoff | `baselines/07-a2a` |
-| 8 — Human-in-the-loop | `baselines/08-hitl` |
+| Part | Baseline file(s) | Starter file |
+|------|-----------------|--------------|
+| 1 — Framing & first agent | `baseline/01-1-first-agent.py` | — |
+| 2 — Context engineering | `baseline/02-1-context-map.md` | — |
+| 3 — Memory | `baseline/03-1-order-memory.py`, `baseline/03-2-agent-memory.py` | — |
+| 4 — Specs & personas | `baseline/04-1-spec.md` | — |
+| 5 — MCP fundamentals | `baseline/05-1-mcp-design.md` | — |
+| 6 — Build the MCP server | `baseline/06-1-mcp-server.py` | `starter/06-1-mcp-server.py` |
+| 7 — Agent Framework & first MCP agent | `baseline/07-1-connected-agent.py` | `starter/07-1-connected-agent.py` |
+| 8 — Native tools & A2A handoff | `baseline/08-1-a2a-agent.py` | `starter/08-1-a2a-agent.py` |
+| 9 — Human-in-the-loop | `baseline/09-1-hitl-agent.py` | `starter/09-1-hitl-agent.py` |
 
-Switch with: `git stash && git checkout <branch> && git stash pop`
+Copy the baseline file to the `workshop/` root (or run it directly from `baseline/`) and
+continue from there. Starter files include TODO comments marking exactly what to implement.
