@@ -23,11 +23,11 @@ Escalation rules to implement:
   Rule 3 - Customer-impacting or irreversible proposed action
 
 Run:
-    python starter/10-1-hitl-agent.py --check-condition --order DM-1037
-    python starter/10-1-hitl-agent.py --check-condition --order DM-1037 --propose-action
-    python starter/10-1-hitl-agent.py --check-condition --order DM-1060 --propose-action
-    python starter/10-1-hitl-agent.py --check-condition --order DM-1037 --decide approve --by Darryl
-    python starter/10-1-hitl-agent.py --check-condition --order DM-1037 --decide correct --to damaged --by Darryl --note "Photo shows crushed corner"
+    python starter/10-1-hitl-agent.py --check-condition --order PKG-2024-009
+    python starter/10-1-hitl-agent.py --check-condition --order PKG-2024-009 --propose-action
+    python starter/10-1-hitl-agent.py --check-condition --order PKG-2024-004 --propose-action
+    python starter/10-1-hitl-agent.py --check-condition --order PKG-2024-009 --decide approve --by Darryl
+    python starter/10-1-hitl-agent.py --check-condition --order PKG-2024-006 --decide correct --to damaged --by Darryl --note "Photo shows crushed corner"
 
 Compare with the completed version at baseline/10-1-hitl-agent.py.
 """
@@ -116,10 +116,10 @@ def suggest_condition(package_data: dict[str, Any]) -> tuple[str, float]:
     Starting hints:
       - "missing label" in raw text   -> ("missing label", 0.95)
       - "wrong address" in raw text   -> ("wrong address", 0.90)
-      - "damaged" in raw text         -> ("damaged",        0.88)
-      - status == "exception"         -> ("needs inspection", 0.80)
+      - status == "damaged" (or "damag" in raw) -> ("damaged", 0.88)
+      - status == "returned"          -> ("needs inspection", 0.80)
       - fragile and no truck assigned -> ("unclear",        0.72)
-      - status in_transit/delivered   -> ("OK",             0.96)
+      - status packaged/shipped/delivered -> ("OK",         0.96)
     """
     return "unclear", 0.50  # TODO: replace with real logic
 
@@ -193,7 +193,7 @@ async def cmd_check_condition(
     decided_by: str,
     note: str,
 ) -> None:
-    package_id   = order_id if order_id.upper().startswith("DM-") else f"DM-{order_id}"
+    package_id   = order_id if order_id.upper().startswith("PKG-") else f"PKG-2024-{int(order_id):03d}"
     package_data = await fetch_package(package_id)
 
     if package_data is None:
@@ -220,7 +220,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Dunder Mifflin HITL condition checker")
     parser.add_argument("--check-condition", action="store_true",
                         help="Run the condition checker for an order")
-    parser.add_argument("--order", help="Package/order ID (e.g. DM-1037 or 1037)")
+    parser.add_argument("--order", help="Package/order ID (e.g. PKG-2024-009)")
     parser.add_argument("--propose-action", action="store_true",
                         help="Show proposed action and human confirmation gate")
     parser.add_argument("--decide", choices=["approve", "reject", "correct"],
