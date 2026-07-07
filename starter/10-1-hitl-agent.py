@@ -1,4 +1,4 @@
-"""Part 10 — Human-in-the-loop & condition checker (starter).
+"""Part 10 - Human-in-the-loop & condition checker (starter).
 
 The A2A handoff from Part 9 is complete below. This workshop is about agentic behaviour,
 not writing Python from scratch, so the lab doc gives you a copy-paste snippet for every
@@ -6,21 +6,21 @@ TODO below. Open the doc and paste each snippet over the matching stub, top to b
 
     docs/segments/10-human-in-the-loop-and-condition-checker.md
 
-  TODO (step 2) Paste fetch_package        — fetch live data via the MCP server
-  TODO (step 2) Paste suggest_condition    — return one of VALID_CONDITIONS + confidence
-  TODO (step 2) Paste proposed_action_for  — map condition -> action string
+  TODO (step 2) Paste fetch_package        - fetch live data via the MCP server
+  TODO (step 2) Paste suggest_condition    - return one of VALID_CONDITIONS + confidence
+  TODO (step 2) Paste proposed_action_for  - map condition -> action string
   TODO (step 3) Confirm VALID_CONDITIONS covers all required categories (no edit needed)
-  TODO (step 4) Paste escalation_reason    — the three escalation rules
+  TODO (step 4) Paste escalation_reason    - the three escalation rules
   TODO (step 5) Paste the confirmation-gate block into cmd_check_condition
-  TODO (step 6) Paste build_review_payload — what the reviewer needs to decide
-  TODO (step 7) Paste record_decision      — the audit artifact, then run both paths
+  TODO (step 6) Paste build_review_payload - what the reviewer needs to decide
+  TODO (step 7) Paste record_decision      - the audit artifact, then run both paths
 
 Condition categories: OK, damaged, unclear, missing label, wrong address, needs inspection
 
 Escalation rules to implement:
-  Rule 1 — Confidence below 0.85
-  Rule 2 — High-risk condition (damaged, missing label, wrong address)
-  Rule 3 — Customer-impacting or irreversible proposed action
+  Rule 1 - Confidence below 0.85
+  Rule 2 - High-risk condition (damaged, missing label, wrong address)
+  Rule 3 - Customer-impacting or irreversible proposed action
 
 Run:
     python starter/10-1-hitl-agent.py --check-condition --order DM-1037
@@ -85,9 +85,9 @@ def escalation_reason(
     """Return the first escalation rule that fires, or None if safe to proceed.
 
     TODO: implement the three rules:
-      Rule 1 — confidence < CONFIDENCE_THRESHOLD
-      Rule 2 — condition in HIGH_RISK_CONDITIONS
-      Rule 3 — proposed_action contains a CUSTOMER_IMPACTING_KEYWORD
+      Rule 1 - confidence < CONFIDENCE_THRESHOLD
+      Rule 2 - condition in HIGH_RISK_CONDITIONS
+      Rule 3 - proposed_action contains a CUSTOMER_IMPACTING_KEYWORD
     Return a descriptive string naming the rule that fired, or None.
     """
     return None  # TODO: replace with rule checks

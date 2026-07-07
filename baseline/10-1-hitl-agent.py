@@ -1,4 +1,4 @@
-"""Part 10 — Human-in-the-loop & condition checker.
+"""Part 10 - Human-in-the-loop & condition checker.
 
 Extends Part 8 with a PackageConditionChecker that:
   - Fetches live package data via the running MCP server
@@ -10,9 +10,9 @@ Extends Part 8 with a PackageConditionChecker that:
 Condition categories: OK, damaged, unclear, missing label, wrong address, needs inspection
 
 Escalation rules:
-  Rule 1 — Confidence below threshold (< 0.85)
-  Rule 2 — High-risk condition: damaged, missing label, or wrong address
-  Rule 3 — Customer-impacting or irreversible proposed action
+  Rule 1 - Confidence below threshold (< 0.85)
+  Rule 2 - High-risk condition: damaged, missing label, or wrong address
+  Rule 3 - Customer-impacting or irreversible proposed action
 
 Run:
     python baseline/10-1-hitl-agent.py --check-condition --order DM-1037
@@ -78,17 +78,17 @@ def escalation_reason(
     if confidence < CONFIDENCE_THRESHOLD:
         return (
             f"Rule 1: confidence {confidence:.2f} is below threshold "
-            f"{CONFIDENCE_THRESHOLD} — human confirmation required"
+            f"{CONFIDENCE_THRESHOLD} - human confirmation required"
         )
     if condition in HIGH_RISK_CONDITIONS:
         return (
-            f"Rule 2: condition '{condition}' is high-risk — "
+            f"Rule 2: condition '{condition}' is high-risk - "
             "human review required before any downstream action"
         )
     if proposed_action and any(kw in proposed_action for kw in CUSTOMER_IMPACTING_KEYWORDS):
         return (
             f"Rule 3: proposed action '{proposed_action}' is customer-impacting or "
-            "irreversible — human confirmation required"
+            "irreversible - human confirmation required"
         )
     return None
 
