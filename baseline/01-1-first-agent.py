@@ -20,7 +20,7 @@ from openai import AzureOpenAI
 load_dotenv()
 
 # -- Load data ----------------------------------------------------------------
-_root = Path(__file__).parent.parent
+_root = Path(__file__).parent
 PACKAGES = json.loads((_root / "data/packages.json").read_text())
 ROUTES   = json.loads((_root / "data/routes.json").read_text())
 

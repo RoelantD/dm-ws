@@ -32,7 +32,7 @@ extract_and_store = _mod.extract_and_store
 get_context       = _mod.get_context
 
 # -- Load data ----------------------------------------------------------------
-_root = Path(__file__).parent.parent
+_root = Path(__file__).parent
 PACKAGES = json.loads((_root / "data/packages.json").read_text())
 ROUTES   = json.loads((_root / "data/routes.json").read_text())
 

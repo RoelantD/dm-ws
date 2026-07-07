@@ -116,7 +116,7 @@ Ground every claim in a tool result. If you have not looked something up, say so
 def package_status_policy() -> str:
     """The Dunder Mifflin package handling and status policy."""
     from pathlib import Path
-    policy_path = Path(__file__).parent.parent / "data" / "policy.md"
+    policy_path = Path(__file__).parent / "data" / "policy.md"
     if policy_path.exists():
         return policy_path.read_text()
     return "Package status policy: see Dunder Mifflin shipping guidelines."

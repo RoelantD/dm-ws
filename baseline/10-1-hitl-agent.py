@@ -39,7 +39,7 @@ from mcp.client.stdio import stdio_client
 load_dotenv()
 
 # -- MCP server ---------------------------------------------------------------
-_ROOT = Path(__file__).parent.parent  # workshop/
+_ROOT = Path(__file__).parent
 _SERVER_FILE = _ROOT / "mcp_server.py"
 
 if _SERVER_FILE.exists():
