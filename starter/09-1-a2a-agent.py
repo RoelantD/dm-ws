@@ -14,7 +14,7 @@ Run (after you copy this file to package_label_parser_agent.py):
     python package_label_parser_agent.py --show-tools
     python package_label_parser_agent.py --handoff --label "DM-1037 frgile rte R-2"
     python package_label_parser_agent.py --handoff --label "???" --show-handoff
-    python package_label_parser_agent.py --order DM-1037 --show-steps
+    python package_label_parser_agent.py --order PKG-2024-003 --show-steps
 
 Compare with the completed version at baseline/09-1-a2a-agent.py.
 """
@@ -37,7 +37,9 @@ from openai import AzureOpenAI
 load_dotenv()
 
 # -- MCP server ---------------------------------------------------------------
-_ROOT = Path(__file__).parent
+_ROOT = Path(__file__).resolve().parent
+if not (_ROOT / "data").exists():  # running from starter/ or baseline/
+    _ROOT = _ROOT.parent
 _SERVER_FILE = _ROOT / "mcp_server.py"
 
 if _SERVER_FILE.exists():
@@ -46,10 +48,10 @@ if _SERVER_FILE.exists():
         args=[str(_SERVER_FILE)],
     )
 else:
+    # Part 6 not completed yet - use the finished baseline server instead.
     SERVER_PARAMS = StdioServerParameters(
         command=sys.executable,
-        args=["-m", "packagemcp"],
-        env={**os.environ, "PYTHONPATH": str(_ROOT)},
+        args=[str(_ROOT / "baseline" / "06-1-mcp-server.py")],
     )
 
 # -- Azure OpenAI client ------------------------------------------------------
@@ -72,8 +74,8 @@ Escalation: if an order is missing a route or needs a manager's decision, ask fo
 # ── Native function tool (Part 8 complete) ───────────────────────────────────
 # Runs in-process; no MCP server needed. Compare with the MCP tools below.
 
-_ORDER_RE   = re.compile(r"\bDM-\d+\b", re.IGNORECASE)
-_ROUTE_RE   = re.compile(r"\b(?:rte|route)\s*(R-\d+)\b", re.IGNORECASE)
+_ORDER_RE   = re.compile(r"\b(?:DM|PKG)-[\w-]+", re.IGNORECASE)
+_ROUTE_RE   = re.compile(r"\b(?:rte|route)\s*((?:R|ROUTE)-[\w-]+)", re.IGNORECASE)
 _FRAGILE_RE = re.compile(r"\b(?:fragile|frgile|frgl|frg)\b", re.IGNORECASE)
 
 
@@ -247,7 +249,7 @@ async def show_tools_async() -> None:
     print("Native tools (in-process, no server):")
     print(f"  parse_label - {parse_label.__doc__.splitlines()[0]}")
     print()
-    print("MCP tools (served by mcp_server.py / packagemcp):")
+    print("MCP tools (served by mcp_server.py):")
     for t in tools_result.tools:
         first_line = (t.description or "").splitlines()[0]
         print(f"  {t.name} - {first_line}")

@@ -2,7 +2,7 @@
 
 > This is the hands-on repo for the **Agentic AI Masterclass** workshop.
 > You will build a series of AI agents around a fictional Dunder Mifflin
-> package-manager scenario across eight parts.
+> package-manager scenario across ten parts.
 
 ## Quick start
 
@@ -38,11 +38,13 @@ Each part that needs a starting template has a file in `starter/` to begin from.
 | 5 — MCP fundamentals | `baseline/05-1-mcp-design.md` | — |
 | 6 — Build the MCP server | `baseline/06-1-mcp-server.py` | `starter/06-1-mcp-server.py` |
 | 7 — Agent Framework & first MCP agent | `baseline/07-1-connected-agent.py` | `starter/07-1-connected-agent.py` |
-| 8 — Native tools & A2A handoff | `baseline/08-1-a2a-agent.py` | `starter/08-1-a2a-agent.py` |
-| 9 — Human-in-the-loop | `baseline/09-1-hitl-agent.py` | `starter/09-1-hitl-agent.py` |
+| 8 — Native tools | `baseline/08-1-native-tools-agent.py` | `starter/08-1-native-tools-agent.py` |
+| 9 — A2A handoff | `baseline/09-1-a2a-agent.py` | `starter/09-1-a2a-agent.py` |
+| 10 — Human-in-the-loop | `baseline/10-1-hitl-agent.py` | `starter/10-1-hitl-agent.py` |
 
-Copy the baseline file to the `workshop/` root (or run it directly from `baseline/`) and
-continue from there. Starter files include TODO comments marking exactly what to implement.
+Copy the baseline file to this repo's root (`dm-ws/`) under the working name the segment
+page uses (for example `copy baseline\06-1-mcp-server.py mcp_server.py`) and continue from
+there. Starter files include TODO comments marking exactly what to implement.
 
 ## Troubleshooting
 

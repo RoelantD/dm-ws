@@ -27,7 +27,7 @@ Run:
     python starter/10-1-hitl-agent.py --check-condition --order PKG-2024-009 --propose-action
     python starter/10-1-hitl-agent.py --check-condition --order PKG-2024-004 --propose-action
     python starter/10-1-hitl-agent.py --check-condition --order PKG-2024-009 --decide approve --by Darryl
-    python starter/10-1-hitl-agent.py --check-condition --order PKG-2024-006 --decide correct --to damaged --by Darryl --note "Photo shows crushed corner"
+    python starter/10-1-hitl-agent.py --check-condition --order PKG-2024-006 --decide correct --to damaged --by Darryl --note "Crushed corner found on inspection"
 
 Compare with the completed version at baseline/10-1-hitl-agent.py.
 """
@@ -49,7 +49,9 @@ from mcp.client.stdio import stdio_client
 load_dotenv()
 
 # -- MCP server ---------------------------------------------------------------
-_ROOT = Path(__file__).parent
+_ROOT = Path(__file__).resolve().parent
+if not (_ROOT / "data").exists():  # running from starter/ or baseline/
+    _ROOT = _ROOT.parent
 _SERVER_FILE = _ROOT / "mcp_server.py"
 
 if _SERVER_FILE.exists():
@@ -58,10 +60,10 @@ if _SERVER_FILE.exists():
         args=[str(_SERVER_FILE)],
     )
 else:
+    # Part 6 not completed yet - use the finished baseline server instead.
     SERVER_PARAMS = StdioServerParameters(
         command=sys.executable,
-        args=["-m", "packagemcp"],
-        env={**os.environ, "PYTHONPATH": str(_ROOT)},
+        args=[str(_ROOT / "baseline" / "06-1-mcp-server.py")],
     )
 
 # ── TODO (step 3): Condition categories ───────────────────────────────────────

@@ -20,7 +20,9 @@ from openai import AzureOpenAI
 load_dotenv()
 
 # -- Load data ----------------------------------------------------------------
-_root = Path(__file__).parent
+_root = Path(__file__).resolve().parent
+if not (_root / "data").exists():  # running from starter/ or baseline/
+    _root = _root.parent
 PACKAGES = json.loads((_root / "data/packages.json").read_text())
 ROUTES   = json.loads((_root / "data/routes.json").read_text())
 

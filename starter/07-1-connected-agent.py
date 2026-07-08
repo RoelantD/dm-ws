@@ -9,13 +9,13 @@ Lab steps summary:
   3. TODO  In run_agent: connect to the MCP server and list available tools.
   4. TODO  In run_agent: implement the tool-calling loop.
   5. TODO  Wire show_steps to print each tool call number, name, args, and result.
-  6. TEST  Try --order DM-9999 and name one case where the agent should escalate.
+  6. TEST  Try --order PKG-9999 and name one case where the agent should escalate.
 
-Uses mcp_server.py from the workshop root when present; falls back to packagemcp.
+Uses mcp_server.py from the repo root when present; falls back to baseline/06-1-mcp-server.py.
 
 Run:
-    python starter/07-1-connected-agent.py --order DM-1037
-    python starter/07-1-connected-agent.py --order DM-1037 --show-steps
+    python starter/07-1-connected-agent.py --order PKG-2024-003
+    python starter/07-1-connected-agent.py --order PKG-2024-003 --show-steps
 
 Compare with the completed version at baseline/07-1-connected-agent.py.
 """
@@ -36,20 +36,22 @@ from openai import AzureOpenAI
 load_dotenv()
 
 # -- MCP server ---------------------------------------------------------------
-_ROOT = Path(__file__).parent 
+_ROOT = Path(__file__).resolve().parent
+if not (_ROOT / "data").exists():  # running from starter/ or baseline/
+    _ROOT = _ROOT.parent
 _SERVER_FILE = _ROOT / "mcp_server.py"
 
-# Uses mcp_server.py built in Part 6 when present; falls back to packagemcp.
+# Uses mcp_server.py built in Part 6 when present; falls back to the baseline server.
 if _SERVER_FILE.exists():
     SERVER_PARAMS = StdioServerParameters(
         command=sys.executable,
         args=[str(_SERVER_FILE)],
     )
 else:
+    # Part 6 not completed yet - use the finished baseline server instead.
     SERVER_PARAMS = StdioServerParameters(
         command=sys.executable,
-        args=["-m", "packagemcp"],
-        env={**os.environ, "PYTHONPATH": str(_ROOT)},
+        args=[str(_ROOT / "baseline" / "06-1-mcp-server.py")],
     )
 
 # -- Azure OpenAI client ------------------------------------------------------
@@ -91,7 +93,7 @@ async def run_agent(question: str, show_steps: bool = False) -> None:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Dunder Mifflin connected agent")
-    parser.add_argument("--order", default="DM-1037", help="Package/order ID to investigate")
+    parser.add_argument("--order", default="PKG-2024-003", help="Package/order ID to investigate")
     parser.add_argument("--show-steps", action="store_true", help="Print each tool call and result")
     args = parser.parse_args()
     asyncio.run(

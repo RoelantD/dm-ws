@@ -3,13 +3,13 @@
 Connects to the Part 6 mcp_server.py and uses it to investigate package
 orders and propose the next operational step for Darryl.
 
-Uses mcp_server.py from the workshop root when it is present; falls back
-to the pre-built packagemcp module if the attendee has not built it yet.
+Uses mcp_server.py from the repo root when it is present; falls back to
+the finished baseline/06-1-mcp-server.py if the attendee has not built it yet.
 
 Run:
-    python baseline/07-1-connected-agent.py --order DM-1037
-    python baseline/07-1-connected-agent.py --order DM-1037 --show-steps
-    python baseline/07-1-connected-agent.py --order DM-9999 --show-steps
+    python baseline/07-1-connected-agent.py --order PKG-2024-003
+    python baseline/07-1-connected-agent.py --order PKG-2024-003 --show-steps
+    python baseline/07-1-connected-agent.py --order PKG-9999 --show-steps
 """
 from __future__ import annotations
 
@@ -28,20 +28,22 @@ from openai import AzureOpenAI
 load_dotenv()
 
 # -- MCP server ---------------------------------------------------------------
-_ROOT = Path(__file__).parent
+_ROOT = Path(__file__).resolve().parent
+if not (_ROOT / "data").exists():  # running from starter/ or baseline/
+    _ROOT = _ROOT.parent
 _SERVER_FILE = _ROOT / "mcp_server.py"
 
-# Uses mcp_server.py built in Part 6 when present; falls back to packagemcp.
+# Uses mcp_server.py built in Part 6 when present; falls back to the baseline server.
 if _SERVER_FILE.exists():
     SERVER_PARAMS = StdioServerParameters(
         command=sys.executable,
         args=[str(_SERVER_FILE)],
     )
 else:
+    # Part 6 not completed yet - use the finished baseline server instead.
     SERVER_PARAMS = StdioServerParameters(
         command=sys.executable,
-        args=["-m", "packagemcp"],
-        env={**os.environ, "PYTHONPATH": str(_ROOT)},
+        args=[str(_ROOT / "baseline" / "06-1-mcp-server.py")],
     )
 
 # -- Azure OpenAI client ------------------------------------------------------
@@ -116,7 +118,7 @@ async def run_agent(question: str, show_steps: bool = False) -> None:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Dunder Mifflin connected agent")
-    parser.add_argument("--order", default="DM-1037", help="Package/order ID to investigate")
+    parser.add_argument("--order", default="PKG-2024-003", help="Package/order ID to investigate")
     parser.add_argument("--show-steps", action="store_true", help="Print each tool call and result")
     args = parser.parse_args()
     asyncio.run(
