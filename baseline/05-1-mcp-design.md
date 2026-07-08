@@ -25,7 +25,7 @@
 - [x] At least one reusable workflow mapped to a **prompt** (investigate-delayed-package).
 - [x] At least three tools with named inputs and expected output.
 - [x] Every operation marked **read-only** or **approval-required**.
-- [x] State-changing operations marked **approval-required** for the HITL segment (Part 9).
+- [x] State-changing operations marked **approval-required** for the HITL segment (Part 10).
 
 ## Open questions for the Part 6 build
 

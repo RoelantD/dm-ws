@@ -49,7 +49,7 @@ def list_packages() -> str:
 
 @mcp.tool()
 def lookup_package(package_id: str) -> str:
-    """Look up a package by its ID (e.g. DM-1037).
+    """Look up a package by its ID (e.g. PKG-2024-003).
     Returns status, destination, fragile flag, priority, and any delay information."""
     # TODO: call _get(f"/packages/{package_id}"), return "Error: no package found..." on None,
     # otherwise format and return the key fields.
@@ -58,14 +58,14 @@ def lookup_package(package_id: str) -> str:
 
 @mcp.tool()
 def lookup_order_status(package_id: str) -> str:
-    """Return the current delivery status and delay details for a package (e.g. DM-1037). Read-only."""
+    """Return the current delivery status and delay details for a package (e.g. PKG-2024-003). Read-only."""
     # TODO: call _get(f"/packages/{package_id}"), return status + any delay fields.
     return "TODO"
 
 
 @mcp.tool()
 def lookup_route(route_id: str) -> str:
-    """Return route and driver information for a given route ID (e.g. R-2). Read-only."""
+    """Return route and driver information for a given route ID (e.g. ROUTE-20260706-309DD0). Read-only."""
     # TODO: call _get(f"/routes/{route_id}"), return "Error: no route found..." on None,
     # otherwise return the route data as a string.
     return "TODO"

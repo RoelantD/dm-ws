@@ -3,14 +3,14 @@
 Extends the Part 7 connected agent with:
   - A native parse_label function tool (runs in-process; no MCP server needed)
 
-Uses the live mcp_server.py for MCP tools; falls back to packagemcp.
+Uses the live mcp_server.py for MCP tools; falls back to baseline/06-1-mcp-server.py.
 
 Run:
     python baseline/08-1-native-tools-agent.py --show-tools
     python baseline/08-1-native-tools-agent.py --compare-tools
     python baseline/08-1-native-tools-agent.py --parse-label
     python baseline/08-1-native-tools-agent.py --parse-label --label "???"
-    python baseline/08-1-native-tools-agent.py --order DM-1037 --show-steps
+    python baseline/08-1-native-tools-agent.py --order "PKG-2024-013 frgile rte ROUTE-20260706-309DD0" --show-steps
 """
 from __future__ import annotations
 
@@ -31,7 +31,9 @@ from openai import AzureOpenAI
 load_dotenv()
 
 # -- MCP server ---------------------------------------------------------------
-_ROOT = Path(__file__).parent
+_ROOT = Path(__file__).resolve().parent
+if not (_ROOT / "data").exists():  # running from starter/ or baseline/
+    _ROOT = _ROOT.parent
 _SERVER_FILE = _ROOT / "mcp_server.py"
 
 if _SERVER_FILE.exists():
@@ -40,10 +42,10 @@ if _SERVER_FILE.exists():
         args=[str(_SERVER_FILE)],
     )
 else:
+    # Part 6 not completed yet - use the finished baseline server instead.
     SERVER_PARAMS = StdioServerParameters(
         command=sys.executable,
-        args=["-m", "packagemcp"],
-        env={**os.environ, "PYTHONPATH": str(_ROOT)},
+        args=[str(_ROOT / "baseline" / "06-1-mcp-server.py")],
     )
 
 # -- Azure OpenAI client ------------------------------------------------------
@@ -66,8 +68,8 @@ Escalation: if an order is missing a route or needs a manager's decision, ask fo
 # ── Native function tool ──────────────────────────────────────────────────────
 # Runs in-process; no MCP server needed. Compare with the MCP tools below.
 
-_ORDER_RE   = re.compile(r"\bDM-\d+\b", re.IGNORECASE)
-_ROUTE_RE   = re.compile(r"\b(?:rte|route)\s*(R-\d+)\b", re.IGNORECASE)
+_ORDER_RE   = re.compile(r"\b(?:DM|PKG)-[\w-]+", re.IGNORECASE)
+_ROUTE_RE   = re.compile(r"\b(?:rte|route)\s*((?:R|ROUTE)-[\w-]+)", re.IGNORECASE)
 _FRAGILE_RE = re.compile(r"\b(?:fragile|frgile|frgl|frg)\b", re.IGNORECASE)
 
 
@@ -198,7 +200,7 @@ async def show_tools_async() -> None:
     print("Native tools (in-process, no server):")
     print(f"  parse_label — {parse_label.__doc__.splitlines()[0]}")
     print()
-    print("MCP tools (served by mcp_server.py / packagemcp):")
+    print("MCP tools (served by mcp_server.py):")
     for t in tools_result.tools:
         first_line = (t.description or "").splitlines()[0]
         print(f"  {t.name} — {first_line}")

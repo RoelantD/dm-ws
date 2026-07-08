@@ -4,7 +4,8 @@ Extends the Part 1 first agent with a memory middleware that automatically
 stores the active order ID across turns so follow-up questions work without
 the user repeating the order number.
 
-Requires 03-1-order-memory.py in the same folder (loaded via importlib).
+Uses order_memory.py from the repo root when present, otherwise loads
+03-1-order-memory.py from this folder via importlib.
 
 Run:
     python baseline/03-2-agent-memory.py
@@ -23,16 +24,23 @@ from openai import AzureOpenAI
 
 load_dotenv()
 
-# -- Load the order memory module from the same folder ------------------------
-_mem_path = Path(__file__).parent / "03-1-order-memory.py"
-_spec = importlib.util.spec_from_file_location("order_memory", _mem_path)
-_mod = importlib.util.module_from_spec(_spec)
-_spec.loader.exec_module(_mod)
-extract_and_store = _mod.extract_and_store
-get_context       = _mod.get_context
+# -- Load the order memory module ----------------------------------------------
+# Copied to the repo root the module is named order_memory.py (Part 3 lab);
+# run in place from baseline/ it sits next to this file as 03-1-order-memory.py.
+try:
+    from order_memory import extract_and_store, get_context
+except ImportError:
+    _mem_path = Path(__file__).parent / "03-1-order-memory.py"
+    _spec = importlib.util.spec_from_file_location("order_memory", _mem_path)
+    _mod = importlib.util.module_from_spec(_spec)
+    _spec.loader.exec_module(_mod)
+    extract_and_store = _mod.extract_and_store
+    get_context       = _mod.get_context
 
 # -- Load data ----------------------------------------------------------------
-_root = Path(__file__).parent
+_root = Path(__file__).resolve().parent
+if not (_root / "data").exists():  # running from starter/ or baseline/
+    _root = _root.parent
 PACKAGES = json.loads((_root / "data/packages.json").read_text())
 ROUTES   = json.loads((_root / "data/routes.json").read_text())
 

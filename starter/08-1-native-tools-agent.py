@@ -12,7 +12,7 @@ Run:
     python starter/08-1-native-tools-agent.py --show-tools
     python starter/08-1-native-tools-agent.py --parse-label
     python starter/08-1-native-tools-agent.py --parse-label --label "???"
-    python starter/08-1-native-tools-agent.py --order DM-1037 --show-steps
+    python starter/08-1-native-tools-agent.py --order "PKG-2024-013 frgile rte ROUTE-20260706-309DD0" --show-steps
 
 Compare with the completed version at baseline/08-1-native-tools-agent.py.
 """
@@ -34,7 +34,9 @@ from openai import AzureOpenAI
 load_dotenv()
 
 # -- MCP server ---------------------------------------------------------------
-_ROOT = Path(__file__).parent 
+_ROOT = Path(__file__).resolve().parent
+if not (_ROOT / "data").exists():  # running from starter/ or baseline/
+    _ROOT = _ROOT.parent
 _SERVER_FILE = _ROOT / "mcp_server.py"
 
 if _SERVER_FILE.exists():
@@ -43,10 +45,10 @@ if _SERVER_FILE.exists():
         args=[str(_SERVER_FILE)],
     )
 else:
+    # Part 6 not completed yet - use the finished baseline server instead.
     SERVER_PARAMS = StdioServerParameters(
         command=sys.executable,
-        args=["-m", "packagemcp"],
-        env={**os.environ, "PYTHONPATH": str(_ROOT)},
+        args=[str(_ROOT / "baseline" / "06-1-mcp-server.py")],
     )
 
 # -- Azure OpenAI client ------------------------------------------------------
@@ -78,9 +80,9 @@ Escalation: if an order is missing a route or needs a manager's decision, ask fo
 #   Read-only: must not write to any system.
 #
 # Hints
-#   - Order ID pattern  : "DM-" followed by one or more digits (e.g. DM-1037)
+#   - Order ID pattern  : "DM-" or "PKG-" followed by id characters (e.g. DM-1037, PKG-2024-013)
 #   - Fragile indicator : words like "fragile", "frgile", "frgl"
-#   - Route pattern     : "R-" followed by a digit, possibly preceded by "rte" or "route"
+#   - Route pattern     : "R-" or "ROUTE-" followed by id characters, preceded by "rte" or "route"
 #   - Confidence        : start at 1.0; penalise for missing route (-0.15) or fuzzy spelling (-0.08)
 
 def parse_label(raw_label: str) -> str:
@@ -183,7 +185,7 @@ async def show_tools_async() -> None:
     print("Native tools (in-process, no server):")
     print(f"  parse_label — {parse_label.__doc__.splitlines()[0]}")
     print()
-    print("MCP tools (served by mcp_server.py / packagemcp):")
+    print("MCP tools (served by mcp_server.py):")
     for t in tools_result.tools:
         first_line = (t.description or "").splitlines()[0]
         print(f"  {t.name} — {first_line}")
